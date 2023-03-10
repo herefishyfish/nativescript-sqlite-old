@@ -61,6 +61,27 @@ module.exports = {
     // packages
     // build output is always in dist/packages
     '@nativescript': {
+      // @nativescript/sqlite
+      sqlite: {
+        build: {
+          script: 'nx run sqlite:build.all',
+          description: '@nativescript/sqlite: Build',
+        },
+      },
+      // @nativescript/sqlite-sqlcipher
+      'sqlite-sqlcipher': {
+        build: {
+          script: 'nx run sqlite-sqlcipher:build.all',
+          description: '@nativescript/sqlite-sqlcipher: Build',
+        },
+      },
+      // @nativescript/sqlite-requery
+      'sqlite-requery': {
+        build: {
+          script: 'nx run sqlite-requery:build.all',
+          description: '@nativescript/sqlite-requery: Build',
+        },
+      },
       'build-all': {
         script: 'nx run-many --target=build.all --all',
         description: 'Build all packages',
@@ -71,6 +92,18 @@ module.exports = {
       description: '_____________  Focus (VS Code supported)  _____________',
     },
     focus: {
+      sqlite: {
+        script: 'nx run sqlite:focus',
+        description: 'Focus on @nativescript/sqlite',
+      },
+      'sqlite-sqlcipher': {
+        script: 'nx run sqlite-sqlcipher:focus',
+        description: 'Focus on @nativescript/sqlite-sqlcipher',
+      },
+      'sqlite-requery': {
+        script: 'nx run sqlite-requery:focus',
+        description: 'Focus on @nativescript/sqlite-requery',
+      },
       reset: {
         script: 'nx g @nativescript/plugin-tools:focus-packages',
         description: 'Reset Focus',

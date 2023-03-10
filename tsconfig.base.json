@@ -20,7 +20,10 @@
       }
     ],
     "paths": {
-      "@demo/shared": ["tools/demo/index.ts"]
+      "@demo/shared": ["tools/demo/index.ts"],
+      "@nativescript/sqlite": ["packages/sqlite/index.d.ts"],
+      "@nativescript/sqlite-sqlcipher": ["packages/sqlite-sqlcipher/index.d.ts"],
+      "@nativescript/sqlite-requery": ["packages/sqlite-requery/index.d.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

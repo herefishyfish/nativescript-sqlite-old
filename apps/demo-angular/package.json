@@ -1,7 +1,10 @@
 {
   "main": "./src/main.ts",
   "dependencies": {
-    "@nativescript/core": "file:../../node_modules/@nativescript/core"
+    "@nativescript/core": "file:../../node_modules/@nativescript/core",
+    "@nativescript/sqlite": "file:../../dist/packages/sqlite",
+    "@nativescript/sqlite-sqlcipher": "file:../../dist/packages/sqlite-sqlcipher",
+    "@nativescript/sqlite-requery": "file:../../dist/packages/sqlite-requery"
   },
   "devDependencies": {
     "@nativescript/android": "~8.4.0",

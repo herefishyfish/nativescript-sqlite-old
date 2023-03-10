@@ -1,0 +1,65 @@
+{
+  "name": "sqlite-sqlcipher",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/sqlite-sqlcipher",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "options": {
+        "outputPath": "dist/packages/sqlite-sqlcipher",
+        "tsConfig": "packages/sqlite-sqlcipher/tsconfig.json",
+        "packageJson": "packages/sqlite-sqlcipher/package.json",
+        "main": "packages/sqlite-sqlcipher/index.d.ts",
+        "assets": [
+          "packages/sqlite-sqlcipher/*.md",
+          "packages/sqlite-sqlcipher/index.d.ts",
+          "LICENSE",
+          {
+            "glob": "**/*",
+            "input": "packages/sqlite-sqlcipher/platforms/",
+            "output": "./platforms/"
+          }
+        ],
+        "dependsOn": [
+          {
+            "target": "build.all",
+            "projects": "dependencies"
+          }
+        ]
+      }
+    },
+    "build.all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["node tools/scripts/build-finish.ts sqlite-sqlcipher"],
+        "parallel": false
+      },
+      "outputs": ["dist/packages/sqlite-sqlcipher"],
+      "dependsOn": [
+        {
+          "target": "build.all",
+          "projects": "dependencies"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "focus": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["nx g @nativescript/plugin-tools:focus-packages sqlite-sqlcipher"],
+        "parallel": false
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["packages/sqlite-sqlcipher/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
