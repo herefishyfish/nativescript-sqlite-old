@@ -1,0 +1,4 @@
+module JSIModule {
+    header "QuickSQLite.h"
+    export *
+}

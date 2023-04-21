@@ -10,6 +10,9 @@ export class HomeComponent {
       name: 'sqlite',
     },
     {
+      name: 'sqlite-quick',
+    },
+    {
       name: 'sqlite-requery',
     },
     {

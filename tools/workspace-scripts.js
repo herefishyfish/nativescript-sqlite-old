@@ -82,6 +82,13 @@ module.exports = {
           description: '@nativescript/sqlite-requery: Build',
         },
       },
+      // @nativescript/sqlite-quick
+      'sqlite-quick': {
+        build: {
+          script: 'nx run sqlite-quick:build.all',
+          description: '@nativescript/sqlite-quick: Build',
+        },
+      },
       'build-all': {
         script: 'nx run-many --target=build.all --all',
         description: 'Build all packages',
@@ -103,6 +110,10 @@ module.exports = {
       'sqlite-requery': {
         script: 'nx run sqlite-requery:focus',
         description: 'Focus on @nativescript/sqlite-requery',
+      },
+      'sqlite-quick': {
+        script: 'nx run sqlite-quick:focus',
+        description: 'Focus on @nativescript/sqlite-quick',
       },
       reset: {
         script: 'nx g @nativescript/plugin-tools:focus-packages',

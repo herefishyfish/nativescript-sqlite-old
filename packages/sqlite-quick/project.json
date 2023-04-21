@@ -1,0 +1,65 @@
+{
+  "name": "sqlite-quick",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/sqlite-quick",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "options": {
+        "outputPath": "dist/packages/sqlite-quick",
+        "tsConfig": "packages/sqlite-quick/tsconfig.json",
+        "packageJson": "packages/sqlite-quick/package.json",
+        "main": "packages/sqlite-quick/index.d.ts",
+        "assets": [
+          "packages/sqlite-quick/*.md",
+          "packages/sqlite-quick/index.d.ts",
+          "LICENSE",
+          {
+            "glob": "**/*",
+            "input": "packages/sqlite-quick/platforms/",
+            "output": "./platforms/"
+          }
+        ],
+        "dependsOn": [
+          {
+            "target": "build.all",
+            "projects": "dependencies"
+          }
+        ]
+      }
+    },
+    "build.all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["node tools/scripts/build-finish.ts sqlite-quick"],
+        "parallel": false
+      },
+      "outputs": ["dist/packages/sqlite-quick"],
+      "dependsOn": [
+        {
+          "target": "build.all",
+          "projects": "dependencies"
+        },
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    },
+    "focus": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["nx g @nativescript/plugin-tools:focus-packages sqlite-quick"],
+        "parallel": false
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["packages/sqlite-quick/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

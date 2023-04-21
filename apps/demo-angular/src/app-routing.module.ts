@@ -7,7 +7,8 @@ import { HomeComponent } from './home.component';
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'sqlite', loadChildren: () => import('./plugin-demos/sqlite.module').then((m) => m.SqliteCoreModule) },
+  { path: 'sqlite', loadChildren: () => import('./plugin-demos/sqlite.module').then((m) => m.SqliteModule) },
+  { path: 'sqlite-quick', loadChildren: () => import('./plugin-demos/sqlite-quick.module').then((m) => m.SqliteQuickModule) },
   { path: 'sqlite-requery', loadChildren: () => import('./plugin-demos/sqlite-requery.module').then((m) => m.SqliteRequeryModule) },
   { path: 'sqlite-sqlcipher', loadChildren: () => import('./plugin-demos/sqlite-sqlcipher.module').then((m) => m.SqliteSqlcipherModule) },
 ];
