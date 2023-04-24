@@ -1,4 +1,3 @@
-
 #import "QuickSQLite.h"
 
 
@@ -14,7 +13,7 @@ using namespace std;
     NSString *documentPath = [paths objectAtIndex:0];
 
     std::shared_ptr<facebook::jsi::Runtime> rt = [JSIRuntime runtime];
-    osp::install(*rt,[documentPath UTF8String]);
+    QuickSQLiteJSIModule::install(*rt,[documentPath UTF8String]);
 }
 
 @end

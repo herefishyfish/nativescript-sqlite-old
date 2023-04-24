@@ -11,14 +11,14 @@
 #include <vector>
 
 using namespace std;
-using namespace facebook;
+// using namespace facebook;
 
-namespace osp {
+namespace QuickSQLiteJSIModule {
 string docPathStr;
 // std::shared_ptr<react::CallInvoker> invoker;
 
 void install(jsi::Runtime &rt, const char *docPath) {
-  auto quick_module = jsi::Object(jsiRuntime);
+  auto quick_module = jsi::Object(rt);
   docPathStr = std::string(docPath);
   auto pool = std::make_shared<ThreadPool>();
   // invoker = jsCallInvoker;
@@ -445,7 +445,7 @@ void install(jsi::Runtime &rt, const char *docPath) {
   module.setProperty(rt, "loadFile", move(loadFile));
   // module.setProperty(rt, "loadFileAsync", move(loadFileAsync));
 
-  jsiRuntime.global().setProperty(jsiRuntime, "__QuickSQLiteProxy", move(module));
+  rt.global().setProperty(rt, "__QuickSQLiteProxy", move(module));
   // rt.global().setProperty(rt, "__QuickSQLiteProxy", move(module));
 }
 // namespace osp
