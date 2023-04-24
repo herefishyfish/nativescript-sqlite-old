@@ -11,7 +11,7 @@ export class DemoSharedSqliteQuick extends DemoSharedBase {
       console.log(module.install());
       console.log('creating module');
     }
-    global.QuickSQLiteImpl.open('db.sqlite');
+    global.QuickSQLiteImpl.open('db2.sqlite');
     console.log('maybe it did a thing');
   }
 }
