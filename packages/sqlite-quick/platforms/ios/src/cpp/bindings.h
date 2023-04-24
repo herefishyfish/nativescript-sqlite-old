@@ -23,7 +23,7 @@ static void createFunc(jsi::Runtime &jsiRuntime, jsi::Object &object,
 }
 
 #define CREATE_FUNC(prop, object, paramCount, func)                            \
-  createFunc(jsiRuntime, object, prop, paramCount, func)
+  createFunc(jsiRuntime, object, prop, paramCount, func);
 
 namespace QuickSQLiteJSIModule {
 void install(jsi::Runtime &rt, const char *docPath);

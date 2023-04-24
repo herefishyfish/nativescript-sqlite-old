@@ -2,7 +2,7 @@
 #import <NativeScript/JSIRuntime.h>
 #import "cpp/bindings.h"
 
-@interface QuickSqliteModule : NSObject
+@interface QuickSQLiteModule : NSObject
 
 - (void) install;
 
