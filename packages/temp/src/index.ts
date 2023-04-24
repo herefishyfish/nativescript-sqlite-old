@@ -2,10 +2,10 @@ import { NativeModules } from 'react-native';
 
 declare global {
   function nativeCallSyncHook(): unknown;
-  var __QuickSQLiteProxy: object | undefined;
+  var QuickSQLiteImpl: object | undefined;
 }
 
-if (global.__QuickSQLiteProxy == null) {
+if (global.QuickSQLiteImpl == null) {
   const QuickSQLiteModule = NativeModules.QuickSQLite;
 
   if (QuickSQLiteModule == null) {
@@ -24,12 +24,12 @@ if (global.__QuickSQLiteProxy == null) {
   }
 
   // Check again if the constructor now exists. If not, throw an error.
-  if (global.__QuickSQLiteProxy == null) {
+  if (global.QuickSQLiteImpl == null) {
     throw new Error('Failed to install react-native-quick-sqlite, the native initializer function does not exist. Are you trying to use QuickSQLite from different JS Runtimes?');
   }
 }
 
-const proxy = global.__QuickSQLiteProxy;
+const proxy = global.QuickSQLiteImpl;
 export const QuickSQLite = proxy as ISQLite;
 
 /**

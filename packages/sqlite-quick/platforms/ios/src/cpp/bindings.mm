@@ -474,7 +474,7 @@ void install(jsi::Runtime &rt, const char *docPath) {
   // module.setProperty(rt, "loadFile", move(loadFile));
   // module.setProperty(rt, "loadFileAsync", move(loadFileAsync));
 
-  rt.global().setProperty(rt, "__QuickSQLiteProxy", move(module));
+  rt.global().setProperty(rt, "QuickSQLiteImpl", move(module));
 }
 // namespace osp
 
