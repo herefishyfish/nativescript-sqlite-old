@@ -18,8 +18,8 @@ export class DemoSharedSqliteQuick extends DemoSharedBase {
   }
 
   addTable() {
-    global.QuickSQLiteImpl.execute('DROP TABLE IF EXISTS User;');
-    global.QuickSQLiteImpl.execute('CREATE TABLE User ( id INT PRIMARY KEY, name TEXT NOT NULL, age INT, networth REAL) STRICT;');
+    global.QuickSQLiteImpl.execute('db2.sqlite', 'DROP TABLE IF EXISTS User;');
+    global.QuickSQLiteImpl.execute('db2.sqlite', 'CREATE TABLE User ( id INT PRIMARY KEY, name TEXT NOT NULL, age INT, networth REAL) STRICT;');
   }
 
   addRow() {
@@ -27,17 +27,18 @@ export class DemoSharedSqliteQuick extends DemoSharedBase {
     const name = 'Test';
     const age = 22;
     const networth = 123.0001;
-    const res = this.db.execute('INSERT INTO "User" (id, name, age, networth) VALUES(?, ?, ?, ?)', [id, name, age, networth]);
+    const res = global.QuickSQLiteImpl.execute('db2.sqlite', 'INSERT INTO "User" (id, name, age, networth) VALUES(?, ?, ?, ?)', [id, name, age, networth]);
     console.log(res);
   }
 
   getRows() {
     const id = Math.round(Math.random() * 100);
-    const name = 'chance.name()';
+    const name = 'User';
     const age = Math.round(Math.random() * 100);
     const networth = Math.random() * 10000;
-    const res = this.db.execute('INSERT INTO "User" (id, name, age, networth) VALUES(?, ?, ?, ?)', [id, name, age, networth]);
+    global.QuickSQLiteImpl.execute('db2.sqlite', 'INSERT INTO "User" (id, name, age, networth) VALUES(?, ?, ?, ?)', [id, name, age, networth]);
 
-    console.log(res);
+    const users = global.QuickSQLiteImpl.execute('db2.sqlite', 'SELECT * FROM User');
+    console.log('users', users);
   }
 }
