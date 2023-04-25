@@ -1,44 +1,23 @@
 declare const __non_webpack_require__, QuickSQLiteModule;
 import { DemoSharedBase } from '../utils';
-import {} from '@nativescript/sqlite-quick';
+import { QuickSQLite, open } from '@nativescript/sqlite-quick';
 
 export class DemoSharedSqliteQuick extends DemoSharedBase {
-  db;
+  db: QuickSQLite;
 
   testIt() {
-    console.log('test sqlite-quick!');
+    this.db = open({
+      name: 'db.sqlite',
+    });
 
-    if (!global.QuickSQLiteImpl) {
-      const module = new global.QuickSQLiteModule();
-      console.log(module.install());
-      console.log('creating module');
-    }
-    global.QuickSQLiteImpl.open('db2.sqlite');
-    console.log('maybe it did a thing?', this.db);
-  }
+    this.db.execute('DROP TABLE IF EXISTS User');
+    this.db.execute('CREATE TABLE User ( id INT PRIMARY KEY, name TEXT NOT NULL ) STRICT;');
+    this.db.execute('INSERT INTO "User" (id, name) VALUES(?, ?)', [1, 'poopski']);
+    this.db.execute('INSERT INTO "User" (id, name) VALUES(?, ?)', [2, 'doodah']);
+    this.db.execute('INSERT INTO "User" (id, name) VALUES(?, ?)', [3, 'floops']);
+    this.db.execute('INSERT INTO "User" (id, name) VALUES(?, ?)', [4, 'boof']);
+    const users = this.db.execute('SELECT * FROM User');
 
-  addTable() {
-    global.QuickSQLiteImpl.execute('db2.sqlite', 'DROP TABLE IF EXISTS User;');
-    global.QuickSQLiteImpl.execute('db2.sqlite', 'CREATE TABLE User ( id INT PRIMARY KEY, name TEXT NOT NULL, age INT, networth REAL) STRICT;');
-  }
-
-  addRow() {
-    const id = 1;
-    const name = 'Test';
-    const age = 22;
-    const networth = 123.0001;
-    const res = global.QuickSQLiteImpl.execute('db2.sqlite', 'INSERT INTO "User" (id, name, age, networth) VALUES(?, ?, ?, ?)', [id, name, age, networth]);
-    console.log(res);
-  }
-
-  getRows() {
-    const id = Math.round(Math.random() * 100);
-    const name = 'User';
-    const age = Math.round(Math.random() * 100);
-    const networth = Math.random() * 10000;
-    global.QuickSQLiteImpl.execute('db2.sqlite', 'INSERT INTO "User" (id, name, age, networth) VALUES(?, ?, ?, ?)', [id, name, age, networth]);
-
-    const users = global.QuickSQLiteImpl.execute('db2.sqlite', 'SELECT * FROM User');
-    console.log('users', users);
+    console.log(users);
   }
 }

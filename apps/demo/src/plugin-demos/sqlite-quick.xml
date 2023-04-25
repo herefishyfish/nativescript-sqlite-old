@@ -7,9 +7,6 @@
         <ScrollView class="h-full">
           <StackLayout>
             <Button text="Test sqlite-quick" tap="{{ testIt }}" class="btn btn-primary"/>
-            <Button text="Add Table" tap="{{ addTable }}" class="btn btn-primary"/>
-            <Button text="Add row" tap="{{ addRow }}" class="btn btn-primary"/>
-            <Button text="get Rows" tap="{{ getRows }}" class="btn btn-primary"/>
           </StackLayout>
         </ScrollView>
     </StackLayout>
