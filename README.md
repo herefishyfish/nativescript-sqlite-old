@@ -1,4 +1,5 @@
 - [@nativescript/sqlite](packages/sqlite/README.md)
+- [@nativescript/sqlite-metal](packages/sqlite-metal/README.md)
 - [@nativescript/sqlite-requery](packages/sqlite-requery/README.md)
 - [@nativescript/sqlite-sqlcipher](packages/sqlite-sqlcipher/README.md)
 

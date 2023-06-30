@@ -7,7 +7,8 @@
     "@nativescript/core": "file:../../node_modules/@nativescript/core",
     "@nativescript/sqlite": "file:../../packages/sqlite",
     "@nativescript/sqlite-sqlcipher": "file:../../packages/sqlite-sqlcipher",
-    "@nativescript/sqlite-requery": "file:../../packages/sqlite-requery"
+    "@nativescript/sqlite-requery": "file:../../packages/sqlite-requery",
+    "@nativescript/sqlite-metal": "file:../../packages/sqlite-metal"
   },
   "devDependencies": {
     "@nativescript/android": "~8.4.0",

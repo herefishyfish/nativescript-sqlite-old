@@ -9,6 +9,7 @@
 <Button text="sqlite" tap="{{ viewDemo }}" class="btn btn-primary view-demo"/>
 <Button text="sqlite-sqlcipher" tap="{{ viewDemo }}" class="btn btn-primary view-demo"/>
 <Button text="sqlite-requery" tap="{{ viewDemo }}" class="btn btn-primary view-demo"/>
+<Button text="sqlite-metal" tap="{{ viewDemo }}" class="btn btn-primary view-demo"/>
       </StackLayout>
     </ScrollView>
   </StackLayout>
