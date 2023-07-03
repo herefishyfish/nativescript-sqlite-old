@@ -22,6 +22,8 @@ public:
 
     static std::string ConvertFromV8String(v8::Isolate *isolate, const v8::Local<v8::Value> &value);
 
+    static std::vector<v8::Local<v8::Value>> ConvertFromV8Array(v8::Isolate* isolate, const v8::Local<v8::Value>& value);
+
     static bool IsInstanceOf(v8::Isolate *isolate, v8::Local<v8::Value> value, const std::string& clazz);
 
     static void SetInternalClassName(v8::Isolate *isolate, v8::Local<v8::Object> value, const std::string& clazz);

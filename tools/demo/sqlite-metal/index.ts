@@ -1,3 +1,4 @@
+import { Utils } from '@nativescript/core';
 import { DemoSharedBase } from '../utils';
 import { NSCSQLite } from '@nativescript/sqlite-metal';
 
@@ -6,10 +7,18 @@ export class DemoSharedSqliteMetal extends DemoSharedBase {
 
   testIt() {
     console.log('test sqlite-metal!');
-    this.sqlite = new NSCSQLite('db.sqlite');
+    const dbPath = Utils.android.getApplicationContext().getFilesDir().getAbsolutePath() + '/db.sqlite';
+    console.log(dbPath);
+    this.sqlite = new NSCSQLite(dbPath);
     console.dir(this.sqlite);
-    // sqlite.open('db.sqlite');
-    const g = this.sqlite.execute();
-    console.log('g', g);
+    console.log('Create table');
+    this.sqlite.execute('CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER);');
+    console.log('Insert John');
+    this.sqlite.execute('INSERT INTO test (name, age) VALUES (?, ?);', ['John', 25]);
+    console.log('Insert Mary');
+    this.sqlite.execute('INSERT INTO test (name, age) VALUES (?, ?);', ['Mary', 21]);
+
+    const rows = this.sqlite.execute('SELECT * FROM test;');
+    console.log(rows);
   }
 }
