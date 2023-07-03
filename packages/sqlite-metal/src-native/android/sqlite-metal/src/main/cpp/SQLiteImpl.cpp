@@ -210,12 +210,9 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args) {
                sqlite3_bind_null(statement, i + 1);
            } else {
                Helpers::LogToConsole("Unsupported value type at index: " + std::to_string(i));
-               // Handle the unsupported value type error as appropriate
            }
        }
     }
-
-
 
     Helpers::LogToConsole("Execute SQL statement and fetch results");
     v8::Local<v8::Array> resultArray = v8::Array::New(isolate);

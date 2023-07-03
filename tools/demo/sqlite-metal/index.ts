@@ -3,7 +3,7 @@ import { DemoSharedBase } from '../utils';
 import { NSCSQLite } from '@nativescript/sqlite-metal';
 
 export class DemoSharedSqliteMetal extends DemoSharedBase {
-  sqlite: any;
+  sqlite: NSCSQLite;
 
   testIt() {
     console.log('test sqlite-metal!');
