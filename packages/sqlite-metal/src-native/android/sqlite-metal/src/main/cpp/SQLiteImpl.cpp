@@ -185,9 +185,9 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args) {
        Helpers::LogToConsole("Number of parameters: " + std::to_string(paramsLength));
 
        for (int i = 0; i < paramsLength; i++) {
+           Helpers::LogToConsole("Processing parameter at index: " + std::to_string(i));
            auto param = paramsArray->Get(context, i).ToLocalChecked();
 
-           Helpers::LogToConsole("Processing parameter at index: " + std::to_string(i));
            if (param->IsString()) {
                v8::String::Utf8Value str(isolate, param);
                if (str.length() > 0) {
