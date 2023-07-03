@@ -13,10 +13,13 @@ export class DemoSharedSqliteMetal extends DemoSharedBase {
     console.dir(this.sqlite);
     console.log('Create table');
     this.sqlite.execute('CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER);');
-    console.log('Insert John');
-    this.sqlite.execute('INSERT INTO test (name, age) VALUES (?, ?);', ['John', 25]);
-    console.log('Insert Mary');
-    this.sqlite.execute('INSERT INTO test (name, age) VALUES (?, ?);', ['Mary', 21]);
+    console.log('Insert Bob');
+    this.sqlite.execute('INSERT INTO test (name, age) VALUES ("Bob", 22);');
+    // console.log(this.sqlite.execute('SELECT * FROM test;'));
+    // console.log('Insert John');
+    // this.sqlite.execute('INSERT INTO test (name, age) VALUES (?, ?);', ['John', 25]);
+    // console.log('Insert Mary');
+    // this.sqlite.execute('INSERT INTO test (name, age) VALUES (?, ?);', ['Mary', 21]);
 
     const rows = this.sqlite.execute('SELECT * FROM test;');
     console.log(rows);

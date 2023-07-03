@@ -150,108 +150,152 @@ void SQLiteImpl::Transaction(const v8::FunctionCallbackInfo<v8::Value> &args)
   returnString(args, "Transaction");
 }
 
-void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args) {
-    v8::Isolate *isolate = args.GetIsolate();
-    auto context = isolate->GetCurrentContext();
+void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
+{
+  v8::Isolate *isolate = args.GetIsolate();
+  auto context = isolate->GetCurrentContext();
+  if (context.IsEmpty())
+  {
+    Helpers::LogToConsole("Context is not initialized");
+    return;
+  }
 
-    Helpers::LogToConsole("Checking input parameters ...");
-    if (args.Length() < 1 || !args[0]->IsString()) {
-        Helpers::LogToConsole("Invalid arguments");
-        return;
-    }
+  Helpers::LogToConsole("Checking input parameters ...");
+  if (args.Length() < 1 || !args[0]->IsString())
+  {
+    Helpers::LogToConsole("Invalid arguments");
+    return;
+  }
 
-    Helpers::LogToConsole("Convert arguments to C++ types");
-    std::string sql = Helpers::ConvertFromV8String(isolate, args[0]);
+  Helpers::LogToConsole("Convert arguments to C++ types");
+  std::string sql = Helpers::ConvertFromV8String(isolate, args[0]);
 
-    SQLiteImpl *impl = GetPointer(args.This());
-    if (impl == nullptr) {
-        Helpers::LogToConsole("Invalid SQLite instance");
-        return;
-    }
+  SQLiteImpl *impl = GetPointer(args.This());
+  if (impl == nullptr)
+  {
+    Helpers::LogToConsole("Invalid SQLite instance");
+    return;
+  }
 
-    sqlite3_stmt *statement;
-    int statementStatus = sqlite3_prepare_v2(impl->sqlite_, sql.c_str(), -1, &statement, NULL);
+  sqlite3_stmt *statement;
+  int statementStatus = sqlite3_prepare_v2(impl->sqlite_, sql.c_str(), -1, &statement, NULL);
 
-    Helpers::LogToConsole("Handle sqlite3_prepare_v2 result");
-    if (statementStatus != SQLITE_OK) {
-        Helpers::LogToConsole("SQL preparation error: " + std::string(sqlite3_errmsg(impl->sqlite_)));
-        return;
-    }
+  Helpers::LogToConsole("Handle sqlite3_prepare_v2 result");
+  if (statementStatus != SQLITE_OK)
+  {
+    Helpers::LogToConsole("SQL preparation error: " + std::string(sqlite3_errmsg(impl->sqlite_)));
+    return;
+  }
 
-    Helpers::LogToConsole("Binding parameters");
-    if (args.Length() > 1 && args[1]->IsArray()) {
-       v8::Local<v8::Array> paramsArray = args[1].As<v8::Array>();
-       uint32_t paramsLength = paramsArray->Length();
-       Helpers::LogToConsole("Number of parameters: " + std::to_string(paramsLength));
+  Helpers::LogToConsole("Binding parameters");
+  if (args.Length() > 1 && args[1]->IsArray())
+  {
+    v8::Local<v8::Array> paramsArray = args[1].As<v8::Array>();
+    uint32_t paramsLength = paramsArray->Length();
+    Helpers::LogToConsole("Number of parameters: " + std::to_string(paramsLength));
 
-       for (int i = 0; i < paramsLength; i++) {
-           Helpers::LogToConsole("Processing parameter at index: " + std::to_string(i));
-           auto param = paramsArray->Get(context, i).ToLocalChecked();
+    for (int i = 0; i < paramsLength; i++)
+    {
+      Helpers::LogToConsole("Processing parameter at index: " + std::to_string(i));
+      auto param = paramsArray->Get(context, i).ToLocalChecked();
 
-           if (param->IsString()) {
-               v8::String::Utf8Value str(isolate, param);
-               if (str.length() > 0) {
-                   Helpers::LogToConsole("Parameter at index " + std::to_string(i) + " is a string: " + std::string(*str));
-                   sqlite3_bind_text(statement, i + 1, *str, -1, SQLITE_TRANSIENT);
-               } else {
-                   Helpers::LogToConsole("Parameter at index " + std::to_string(i) + " is an empty string");
-                   sqlite3_bind_text(statement, i + 1, "", -1, SQLITE_TRANSIENT);
-               }
-           } else if (param->IsInt32()) {
-               int32_t value = param->Int32Value(isolate->GetCurrentContext()).ToChecked();
-               Helpers::LogToConsole("Parameter at index " + std::to_string(i) + " is an int32: " + std::to_string(value));
-               sqlite3_bind_int(statement, i + 1, value);
-           } else if (param->IsNumber()) {
-               double value = param->NumberValue(isolate->GetCurrentContext()).ToChecked();
-               Helpers::LogToConsole("Parameter at index " + std::to_string(i) + " is a number: " + std::to_string(value));
-               sqlite3_bind_double(statement, i + 1, value);
-           } else if (param->IsNull()) {
-               Helpers::LogToConsole("Parameter at index " + std::to_string(i) + " is null");
-               sqlite3_bind_null(statement, i + 1);
-           } else {
-               Helpers::LogToConsole("Unsupported value type at index: " + std::to_string(i));
-           }
-       }
-    }
-
-    Helpers::LogToConsole("Execute SQL statement and fetch results");
-    v8::Local<v8::Array> resultArray = v8::Array::New(isolate);
-    int result;
-    int index = 0;
-    while ((result = sqlite3_step(statement)) == SQLITE_ROW) {
-        v8::Local<v8::Object> row = v8::Object::New(isolate);
-        int count = sqlite3_column_count(statement);
-        for (int i = 0; i < count; i++) {
-            std::string name = sqlite3_column_name(statement, i);
-            int type = sqlite3_column_type(statement, i);
-
-            switch (type) {
-                case SQLITE_INTEGER:
-                case SQLITE_FLOAT:
-                    row->Set(context, Helpers::ConvertToV8String(isolate, name), v8::Number::New(isolate, sqlite3_column_double(statement, i)));
-                    break;
-                case SQLITE_TEXT:
-                    row->Set(context, Helpers::ConvertToV8String(isolate, name), Helpers::ConvertToV8String(isolate, (const char *)sqlite3_column_text(statement, i)));
-                    break;
-                case SQLITE_NULL:
-                default:
-                    row->Set(context, Helpers::ConvertToV8String(isolate, name), v8::Null(isolate));
-                    break;
-            }
+      if (param->IsString())
+      {
+        v8::String::Utf8Value str(isolate, param);
+        if (str.length() > 0)
+        {
+          Helpers::LogToConsole("Parameter at index " + std::to_string(i) + " is a string: " + std::string(*str));
+          sqlite3_bind_text(statement, i + 1, *str, -1, SQLITE_TRANSIENT);
         }
+        else
+        {
+          Helpers::LogToConsole("Parameter at index " + std::to_string(i) + " is an empty string");
+          sqlite3_bind_text(statement, i + 1, "", -1, SQLITE_TRANSIENT);
+        }
+      }
+      else if (param->IsInt32())
+      {
+        int32_t value = param->Int32Value(isolate->GetCurrentContext()).ToChecked();
+        Helpers::LogToConsole("Parameter at index " + std::to_string(i) + " is an int32: " + std::to_string(value));
+        sqlite3_bind_int(statement, i + 1, value);
+      }
+      else if (param->IsNumber())
+      {
+        double value = param->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        Helpers::LogToConsole("Parameter at index " + std::to_string(i) + " is a number: " + std::to_string(value));
+        sqlite3_bind_double(statement, i + 1, value);
+      }
+      else if (param->IsNull())
+      {
+        Helpers::LogToConsole("Parameter at index " + std::to_string(i) + " is null");
+        sqlite3_bind_null(statement, i + 1);
+      }
+      else
+      {
+        Helpers::LogToConsole("Unsupported value type at index: " + std::to_string(i));
+      }
+    }
+  }
 
-        resultArray->Set(context, index++, row);
+  Helpers::LogToConsole("Execute SQL statement and fetch results");
+  v8::Local<v8::Array> resultArray = v8::Array::New(isolate);
+  int result;
+  int index = 0;
+  Helpers::LogToConsole("Getting rows");
+  while ((result = sqlite3_step(statement)) == SQLITE_ROW)
+  {
+    v8::Local<v8::Object> row = v8::Object::New(isolate);
+    int count = sqlite3_column_count(statement);
+    Helpers::LogToConsole("Column count:" + std::to_string(count));
+
+    for (int i = 0; i < count; i++)
+    {
+      Helpers::LogToConsole("Getting column: " + std::to_string(i));
+      std::string name = sqlite3_column_name(statement, i);
+      Helpers::LogToConsole("Column name: " + name);
+      int type = sqlite3_column_type(statement, i);
+      Helpers::LogToConsole("Column type: " + std::to_string(type));
+
+      switch (type)
+      {
+      case SQLITE_INTEGER:
+        Helpers::LogToConsole("Column value: " + std::to_string(sqlite3_column_int(statement, i)));
+        row->Set(context, Helpers::ConvertToV8String(isolate, name), v8::Integer::New(isolate, sqlite3_column_int(statement, i)));
+        break;
+      case SQLITE_FLOAT:
+        Helpers::LogToConsole("Column value: " + std::to_string(sqlite3_column_double(statement, i)));
+        row->Set(context, Helpers::ConvertToV8String(isolate, name), v8::Number::New(isolate, sqlite3_column_double(statement, i)));
+        break;
+      case SQLITE_TEXT:
+        Helpers::LogToConsole("Column value: " + std::string((const char *)sqlite3_column_text(statement, i)));
+        row->Set(context, Helpers::ConvertToV8String(isolate, name), Helpers::ConvertToV8String(isolate, (const char *)sqlite3_column_text(statement, i)));
+        break;
+      case SQLITE_NULL:
+      default:
+        row->Set(context, Helpers::ConvertToV8String(isolate, name), v8::Null(isolate));
+        break;
+      }
     }
 
-    Helpers::LogToConsole("Finalizing");
-    sqlite3_finalize(statement);
+    Helpers::LogToConsole("Adding row to result array");
+    resultArray->Set(context, index++, row);
+    Helpers::LogToConsole("Added result to array");
+  }
 
-    if (result != SQLITE_DONE) {
-        Helpers::LogToConsole("SQL execution error: " + std::string(sqlite3_errmsg(impl->sqlite_)));
-        return;
-    }
+  int finalizeStatus = sqlite3_finalize(statement);
+  if (finalizeStatus != SQLITE_OK)
+  {
+    Helpers::LogToConsole("SQL finalization error: " + std::string(sqlite3_errmsg(impl->sqlite_)));
+    return;
+  }
 
-    args.GetReturnValue().Set(resultArray);
+  if (result != SQLITE_DONE)
+  {
+    Helpers::LogToConsole("SQL execution error: " + std::string(sqlite3_errmsg(impl->sqlite_)));
+    return;
+  }
+
+  args.GetReturnValue().Set(resultArray);
 }
 
 void SQLiteImpl::ExecuteAsync(const v8::FunctionCallbackInfo<v8::Value> &args)
