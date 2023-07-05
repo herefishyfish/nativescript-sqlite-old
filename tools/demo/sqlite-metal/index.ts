@@ -17,7 +17,8 @@ export class DemoSharedSqliteMetal extends DemoSharedBase {
     this.sqlite.execute('INSERT INTO test (name, age) VALUES ("Bob", 22);');
     // console.log(this.sqlite.execute('SELECT * FROM test;'));
     console.log('Insert John');
-    this.sqlite.execute('INSERT INTO test (name, age) VALUES (?, ?);', ['John', 25]);
+    const john = this.sqlite.execute('INSERT INTO test (name, age) VALUES (?, ?);', ['John', 25]);
+    console.log(john);
     console.log('Insert Mary');
     this.sqlite.execute('INSERT INTO test (name, age) VALUES (?, ?);', ['Mary', 21]);
 

@@ -166,12 +166,63 @@ void SQLiteImpl::Delete(const v8::FunctionCallbackInfo<v8::Value> &args)
 
 void SQLiteImpl::Attach(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
-  returnString(args, "Attach");
+  v8::Isolate *isolate = args.GetIsolate();
+  auto context = isolate->GetCurrentContext();
+
+  if (args.Length() < 2 || !args[0]->IsString() || !args[1]->IsString())
+  {
+    return;
+  }
+
+  std::string alias = Helpers::ConvertFromV8String(isolate, args[0]);
+  std::string path = Helpers::ConvertFromV8String(isolate, args[1]);
+
+  SQLiteImpl *impl = GetPointer(args.This());
+  if (impl == nullptr)
+  {
+    Helpers::LogToConsole("Failed to attach database: database is not open.");
+    return;
+  }
+
+  std::string statement = "ATTACH DATABASE '" + path + "' AS " + alias;
+  char *errmsg;
+  int rc = sqlite3_exec(impl->sqlite_, statement.c_str(), 0, 0, &errmsg);
+
+  if (rc != SQLITE_OK)
+  {
+    Helpers::LogToConsole("Failed to attach database: " + std::string(errmsg));
+    return;
+  }
 }
 
 void SQLiteImpl::Detach(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
-  returnString(args, "Detach");
+  v8::Isolate *isolate = args.GetIsolate();
+  auto context = isolate->GetCurrentContext();
+
+  if (args.Length() < 1 || !args[0]->IsString())
+  {
+    return;
+  }
+
+  std::string alias = Helpers::ConvertFromV8String(isolate, args[0]);
+
+  SQLiteImpl *impl = GetPointer(args.This());
+  if (impl == nullptr)
+  {
+    Helpers::LogToConsole("Failed to detach database: database is not open.");
+    return;
+  }
+
+  std::string statement = "DETACH DATABASE " + alias;
+  char *errmsg;
+  int rc = sqlite3_exec(impl->sqlite_, statement.c_str(), 0, 0, &errmsg);
+
+  if (rc != SQLITE_OK)
+  {
+    Helpers::LogToConsole("Failed to detach database: " + std::string(errmsg));
+    return;
+  }
 }
 
 void SQLiteImpl::Transaction(const v8::FunctionCallbackInfo<v8::Value> &args)
@@ -295,10 +346,12 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
   v8::Local<v8::Object> resultObject = v8::Object::New(isolate);
   resultObject->Set(context, Helpers::ConvertToV8String(isolate, "insertId"), v8::Integer::New(isolate, sqlite3_last_insert_rowid(impl->sqlite_)));
   resultObject->Set(context, Helpers::ConvertToV8String(isolate, "rowsAffected"), v8::Integer::New(isolate, sqlite3_changes(impl->sqlite_)));
-  v8::Local<v8::Object> rowsObject = v8::Object::New(isolate);
-  rowsObject->Set(context, Helpers::ConvertToV8String(isolate, "_array"), resultArray);
-  rowsObject->Set(context, Helpers::ConvertToV8String(isolate, "length"), v8::Integer::New(isolate, resultArray->Length()));
-  resultObject->Set(context, Helpers::ConvertToV8String(isolate, "rows"), rowsObject);
+  // v8::Local<v8::Object> rowsObject = v8::Object::New(isolate);
+  // rowsObject->Set(context, Helpers::ConvertToV8String(isolate, "_array"), resultArray);
+  // rowsObject->Set(context, Helpers::ConvertToV8String(isolate, "length"), v8::Integer::New(isolate, resultArray->Length()));
+  if(resultArray->Length() > 0) {
+    resultObject->Set(context, Helpers::ConvertToV8String(isolate, "rows"), resultArray);
+  }
 
   args.GetReturnValue().Set(resultObject);
 }
