@@ -8,7 +8,9 @@
           <StackLayout>
             <Button text="Test sqlite-metal" tap="{{ testIt }}" class="btn btn-primary"/>
             <Button text="Bench sqlite-metal" tap="{{ benchIt }}" class="btn btn-primary"/>
-
+            <Button text="open db" tap="{{ openDatabase }}" class="btn btn-primary"/>
+            <Button text="close db" tap="{{ closeDatabase }}" class="btn btn-primary"/>
+            <Button text="delete db" tap="{{ deleteDatabase }}" class="btn btn-primary"/>
           </StackLayout>
         </ScrollView>
     </StackLayout>

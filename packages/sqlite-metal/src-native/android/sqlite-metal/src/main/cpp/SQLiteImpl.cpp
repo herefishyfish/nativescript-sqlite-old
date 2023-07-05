@@ -97,7 +97,6 @@ void SQLiteImpl::Open(const v8::FunctionCallbackInfo<v8::Value> &args)
   }
 
   std::string path = Helpers::ConvertFromV8String(isolate, args[0]);
-  // Hello from C++: " + pat
 
   sqlite3 *db = nullptr;
   int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX;
@@ -111,6 +110,7 @@ void SQLiteImpl::Open(const v8::FunctionCallbackInfo<v8::Value> &args)
   }
 
   auto *impl = new SQLiteImpl(db);
+  impl->path_ = path;
   auto ext = v8::External::New(isolate, impl);
 
   auto ret = args.This();
@@ -127,12 +127,41 @@ void returnString(const v8::FunctionCallbackInfo<v8::Value> &args, std::string f
 
 void SQLiteImpl::Close(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
-  returnString(args, "Close");
+  SQLiteImpl *impl = GetPointer(args.This());
+  if (impl == nullptr || impl->sqlite_ == nullptr)
+  {
+    Helpers::LogToConsole("Failed to close database: database is not open.");
+    return;
+  }
+
+  int closeStatus = sqlite3_close(impl->sqlite_);
+  if (closeStatus != SQLITE_OK)
+  {
+    Helpers::LogToConsole("Failed to close database: " + std::to_string(closeStatus));
+    return;
+  }
+
+  impl->sqlite_ = nullptr;
 }
 
 void SQLiteImpl::Delete(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
-  returnString(args, "Delete");
+  v8::Isolate *isolate = args.GetIsolate();
+  auto context = isolate->GetCurrentContext();
+
+  SQLiteImpl *impl = GetPointer(args.This());
+  if (impl == nullptr || impl->sqlite_ != nullptr)
+  {
+    Helpers::LogToConsole("Failed to delete database: database is open.");
+    return;
+  }
+
+  int deleteStatus = std::remove(impl->path_.c_str());
+  if (deleteStatus != 0)
+  {
+    Helpers::LogToConsole("Failed to delete database: " + std::to_string(deleteStatus));
+    return;
+  }
 }
 
 void SQLiteImpl::Attach(const v8::FunctionCallbackInfo<v8::Value> &args)
@@ -164,7 +193,7 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
   SQLiteImpl *impl = GetPointer(args.This());
   if (impl == nullptr)
   {
-    // Invalid SQLite instance
+    Helpers::LogToConsole("Failed to execute SQL: database is not open.");
     return;
   }
 
@@ -174,7 +203,7 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
   // Handle sqlite3_prepare_v2 result
   if (statementStatus != SQLITE_OK)
   {
-    // SQL preparation error: " + std::string(sqlite3_errmsg(impl->sqlite_)
+    Helpers::LogToConsole("Failed to execute SQL: " + std::to_string(statementStatus));
     return;
   }
 
@@ -253,15 +282,25 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
   int finalizeStatus = sqlite3_finalize(statement);
   if (finalizeStatus != SQLITE_OK)
   {
+    Helpers::LogToConsole("Failed to finalize statement: " + std::to_string(finalizeStatus));
     return;
   }
 
   if (result != SQLITE_DONE)
   {
+    Helpers::LogToConsole("Failed to execute SQL: " + std::to_string(result));
     return;
   }
 
-  args.GetReturnValue().Set(resultArray);
+  v8::Local<v8::Object> resultObject = v8::Object::New(isolate);
+  resultObject->Set(context, Helpers::ConvertToV8String(isolate, "insertId"), v8::Integer::New(isolate, sqlite3_last_insert_rowid(impl->sqlite_)));
+  resultObject->Set(context, Helpers::ConvertToV8String(isolate, "rowsAffected"), v8::Integer::New(isolate, sqlite3_changes(impl->sqlite_)));
+  v8::Local<v8::Object> rowsObject = v8::Object::New(isolate);
+  rowsObject->Set(context, Helpers::ConvertToV8String(isolate, "_array"), resultArray);
+  rowsObject->Set(context, Helpers::ConvertToV8String(isolate, "length"), v8::Integer::New(isolate, resultArray->Length()));
+  resultObject->Set(context, Helpers::ConvertToV8String(isolate, "rows"), rowsObject);
+
+  args.GetReturnValue().Set(resultObject);
 }
 
 void SQLiteImpl::ExecuteAsync(const v8::FunctionCallbackInfo<v8::Value> &args)

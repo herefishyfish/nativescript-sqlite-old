@@ -42,6 +42,7 @@ public:
 
 private:
     sqlite3* sqlite_;
+    std::string path_;
 };
 
 #endif //SQLITE_CORE_SQLITEIMPL_H
