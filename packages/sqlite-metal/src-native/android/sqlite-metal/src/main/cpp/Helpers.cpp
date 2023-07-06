@@ -79,53 +79,79 @@ std::string Helpers::ConvertFromV8String(v8::Isolate *isolate, const v8::Local<v
   return {*result};
 }
 
-std::vector<v8::Local<v8::Value>> Helpers::ConvertFromV8Array(v8::Isolate* isolate, const v8::Local<v8::Value> &value) {
-    std::vector<v8::Local<v8::Value>> vec;
-    auto context = isolate->GetCurrentContext();
+v8::Local<v8::ArrayBuffer> Helpers::ConvertToV8ArrayBuffer(v8::Isolate *isolate, const char *data, int size)
+{
+  v8::Local<v8::ArrayBuffer> arrayBuffer = v8::ArrayBuffer::New(isolate, size);
+  std::shared_ptr<v8::BackingStore> arrayBufferContents = arrayBuffer->GetBackingStore();
 
-    if (value.IsEmpty()) {
-        Helpers::LogToConsole("Value is empty");
-        return {};
+  memcpy(arrayBufferContents->Data(), data, size);
+
+  return arrayBuffer;
+}
+
+std::pair<void *, size_t> Helpers::ConvertFromV8ArrayBuffer(v8::Isolate *isolate, v8::Local<v8::ArrayBuffer> param)
+{
+  void *data = param->GetBackingStore()->Data();
+  size_t length = param->ByteLength();
+
+  return std::make_pair(data, length);
+}
+
+std::vector<v8::Local<v8::Value>> Helpers::ConvertFromV8Array(v8::Isolate *isolate, const v8::Local<v8::Value> &value)
+{
+  std::vector<v8::Local<v8::Value>> vec;
+  auto context = isolate->GetCurrentContext();
+
+  if (value.IsEmpty())
+  {
+    Helpers::LogToConsole("Value is empty");
+    return {};
+  }
+
+  if (value->IsArray())
+  {
+    Helpers::LogToConsole("Value is array");
+    v8::Local<v8::Array> arr = v8::Local<v8::Array>::Cast(value);
+    uint32_t length = arr->Length();
+    Helpers::LogToConsole("Array length: " + std::to_string(length));
+
+    v8::Local<v8::Object> obj = arr.As<v8::Object>();
+    Helpers::LogToConsole("Getting keys");
+    v8::Local<v8::Array> keys = obj->GetPropertyNames(context).ToLocalChecked();
+    Helpers::LogToConsole("Got keys");
+    uint32_t keysLength = keys->Length();
+    Helpers::LogToConsole("Keys length: " + std::to_string(keysLength));
+
+    for (uint32_t i = 0; i < keysLength; i++)
+    {
+      v8::Local<v8::Value> key = keys->Get(context, i).ToLocalChecked();
+      Helpers::LogToConsole("Getting value for key: " + ConvertFromV8String(isolate, key));
+      v8::Local<v8::Value> value = obj->Get(context, key).ToLocalChecked();
+      Helpers::LogToConsole("Key: " + ConvertFromV8String(isolate, key) + " Value: " + ConvertFromV8String(isolate, value));
     }
 
-    if (value->IsArray()) {
-        Helpers::LogToConsole("Value is array");
-        v8::Local<v8::Array> arr = v8::Local<v8::Array>::Cast(value);
-        uint32_t length = arr->Length();
-        Helpers::LogToConsole("Array length: " + std::to_string(length));
-
-        v8::Local<v8::Object> obj = arr.As<v8::Object>();
-        Helpers::LogToConsole("Getting keys");
-        v8::Local<v8::Array> keys = obj->GetPropertyNames(context).ToLocalChecked();
-        Helpers::LogToConsole("Got keys");
-        uint32_t keysLength = keys->Length();
-        Helpers::LogToConsole("Keys length: " + std::to_string(keysLength));
-
-        for(uint32_t i = 0; i < keysLength; i++){
-            v8::Local<v8::Value> key = keys->Get(context, i).ToLocalChecked();
-            Helpers::LogToConsole("Getting value for key: " + ConvertFromV8String(isolate, key));
-            v8::Local<v8::Value> value = obj->Get(context, key).ToLocalChecked();
-            Helpers::LogToConsole("Key: " + ConvertFromV8String(isolate, key) + " Value: " + ConvertFromV8String(isolate, value));
-        }
-
-        for (uint32_t i = 0; i < length; i++) {
-            Helpers::LogToConsole("Getting element at index: " + std::to_string(i));
-            v8::MaybeLocal<v8::Value> maybeElement = arr->Get(isolate->GetCurrentContext(), Helpers::ConvertToV8String(isolate, std::to_string(i)));
-            Helpers::LogToConsole("Checking if element is empty");
-            if (maybeElement.IsEmpty()) {
-                Helpers::LogToConsole("Element at index " + std::to_string(i) + " is empty");
-                continue;
-            }
-            Helpers::LogToConsole("Element at index " + std::to_string(i) + " is not empty");
-            v8::Local<v8::Value> element = maybeElement.ToLocalChecked();
-            Helpers::LogToConsole("Pushing element at index: " + std::to_string(i));
-            vec.push_back(element);
-        }
-    } else {
-        Helpers::LogToConsole("Value is not an array");
+    for (uint32_t i = 0; i < length; i++)
+    {
+      Helpers::LogToConsole("Getting element at index: " + std::to_string(i));
+      v8::MaybeLocal<v8::Value> maybeElement = arr->Get(isolate->GetCurrentContext(), Helpers::ConvertToV8String(isolate, std::to_string(i)));
+      Helpers::LogToConsole("Checking if element is empty");
+      if (maybeElement.IsEmpty())
+      {
+        Helpers::LogToConsole("Element at index " + std::to_string(i) + " is empty");
+        continue;
+      }
+      Helpers::LogToConsole("Element at index " + std::to_string(i) + " is not empty");
+      v8::Local<v8::Value> element = maybeElement.ToLocalChecked();
+      Helpers::LogToConsole("Pushing element at index: " + std::to_string(i));
+      vec.push_back(element);
     }
+  }
+  else
+  {
+    Helpers::LogToConsole("Value is not an array");
+  }
 
-    return vec;
+  return vec;
 }
 
 bool Helpers::IsInstanceOf(v8::Isolate *isolate, v8::Local<v8::Value> value, const std::string &clazz)

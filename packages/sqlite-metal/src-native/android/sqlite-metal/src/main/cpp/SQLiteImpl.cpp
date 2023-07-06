@@ -279,6 +279,11 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
           sqlite3_bind_text(statement, i + 1, "", -1, SQLITE_TRANSIENT);
         }
       }
+      else if (param->IsBoolean())
+      {
+        bool value = param->BooleanValue(isolate);
+        sqlite3_bind_int(statement, i + 1, value ? 1 : 0);
+      }
       else if (param->IsInt32())
       {
         int32_t value = param->Int32Value(isolate->GetCurrentContext()).ToChecked();
@@ -288,6 +293,11 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
       {
         double value = param->NumberValue(isolate->GetCurrentContext()).ToChecked();
         sqlite3_bind_double(statement, i + 1, value);
+      }
+      else if (param->IsArrayBuffer())
+      {
+        auto [data, length] = Helpers::ConvertFromV8ArrayBuffer(isolate, param.As<v8::ArrayBuffer>());
+        sqlite3_bind_blob(statement, i + 1, data, length, SQLITE_STATIC);
       }
       else if (param->IsNull())
       {
@@ -320,6 +330,9 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
       case SQLITE_TEXT:
         row->Set(context, Helpers::ConvertToV8String(isolate, name), Helpers::ConvertToV8String(isolate, (const char *)sqlite3_column_text(statement, i)));
         break;
+      case SQLITE_BLOB:
+        row->Set(context, Helpers::ConvertToV8String(isolate, name), Helpers::ConvertToV8ArrayBuffer(isolate, (const char *)sqlite3_column_blob(statement, i), sqlite3_column_bytes(statement, i)));
+        break;
       case SQLITE_NULL:
       default:
         row->Set(context, Helpers::ConvertToV8String(isolate, name), v8::Null(isolate));
@@ -349,7 +362,8 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
   // v8::Local<v8::Object> rowsObject = v8::Object::New(isolate);
   // rowsObject->Set(context, Helpers::ConvertToV8String(isolate, "_array"), resultArray);
   // rowsObject->Set(context, Helpers::ConvertToV8String(isolate, "length"), v8::Integer::New(isolate, resultArray->Length()));
-  if(resultArray->Length() > 0) {
+  if (resultArray->Length() > 0)
+  {
     resultObject->Set(context, Helpers::ConvertToV8String(isolate, "rows"), resultArray);
   }
 

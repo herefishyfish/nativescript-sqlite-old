@@ -14,7 +14,7 @@ export class DemoSharedSqliteMetal extends DemoSharedBase {
   testIt() {
     console.log('test sqlite-metal!');
     console.log('Insert Bob');
-    this.sqlite.execute('INSERT INTO test (name, age) VALUES ("Bob", 22);');
+    this.sqlite.execute('INSERT INTO test (name, age, blob, lovesN) VALUES ("Bob", 22, x\'10FFAA\', TRUE);');
     // console.log(this.sqlite.execute('SELECT * FROM test;'));
     console.log('Insert John');
     const john = this.sqlite.execute('INSERT INTO test (name, age) VALUES (?, ?);', ['John', 25]);
@@ -33,7 +33,7 @@ export class DemoSharedSqliteMetal extends DemoSharedBase {
     this.sqlite = new NSCSQLite(dbPath);
     console.dir(this.sqlite);
     console.log('Create table');
-    this.sqlite.execute('CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER);');
+    this.sqlite.execute('CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER, cool BOOLEAN, blob BLOB);');
   }
 
   closeDatabase() {
