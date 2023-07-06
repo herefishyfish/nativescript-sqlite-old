@@ -297,7 +297,7 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
       else if (param->IsArrayBuffer())
       {
         auto [data, length] = Helpers::ConvertFromV8ArrayBuffer(isolate, param.As<v8::ArrayBuffer>());
-        sqlite3_bind_blob(statement, i + 1, data, length, SQLITE_STATIC);
+        sqlite3_bind_blob(statement, i + 1, data, length, SQLITE_TRANSIENT);
       }
       else if (param->IsNull())
       {
