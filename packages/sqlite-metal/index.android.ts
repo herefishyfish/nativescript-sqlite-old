@@ -1,5 +1,6 @@
 declare const __non_webpack_require__;
 import { Utils } from '@nativescript/core';
+import { SqliteMetalCommon } from './common';
 
 try {
   java.lang.System.loadLibrary('sqlitemetal');
@@ -20,4 +21,23 @@ global.NSCSQLite.open = function (path) {
   }
 };
 
+const executeAsync = global.NSCSQLite.executeAsync;
+
+global.NSCSQLite.executeAsync = function (query: string, params?: any[]): Promise<any[]> {
+  console.log('?');
+  // callback function to promise function
+  const cb = function (err, result) {
+    return new Promise((resolve, reject) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  };
+  return executeAsync('ok', cb);
+};
+
 export const NSCSQLite = global.NSCSQLite;
+
+export class SqliteMetal extends SqliteMetalCommon {}

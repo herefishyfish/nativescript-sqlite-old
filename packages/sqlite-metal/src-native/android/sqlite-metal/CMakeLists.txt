@@ -48,6 +48,8 @@ add_library(
         src/main/cpp/Caches.cpp
         src/main/cpp/Helpers.cpp
         src/main/cpp/SQLiteImpl.cpp
+        src/main/cpp/SQLite.cpp
+        src/main/cpp/ThreadPool.cpp
 )
 
 
@@ -69,7 +71,6 @@ MESSAGE("# CMAKE_C_FLAGS: " ${CMAKE_C_FLAGS})
 MESSAGE("# CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS})
 
 find_library(system-log log)
-find_library(system-z z)
 
 add_custom_command(TARGET sqlitemetal POST_BUILD COMMAND ${CMAKE_STRIP} --strip-unneeded $<TARGET_FILE:sqlitemetal>)
 
@@ -78,7 +79,6 @@ if ("${ANDROID_ABI}" MATCHES "armeabi-v7a" OR "${ANDROID_ABI}" MATCHES "x86" AND
   # because it contains some implementation of functions such as "strtoll" and "strtoul"
   target_link_libraries(sqlitemetal
           ${system-log}
-          ${system-z}
           ${PROJECT_SOURCE_DIR}/src/main/libs/${ANDROID_ABI}/lib2NativeScript.so
           ${ANDROID_NDK_ROOT}/sources/cxx-stl/llvm-libc++/libs/${ANDROID_ABI}/libandroid_support.a
           ${SQLITE_ANDROID_LIB}
@@ -89,10 +89,16 @@ if ("${ANDROID_ABI}" MATCHES "armeabi-v7a" OR "${ANDROID_ABI}" MATCHES "x86" AND
 else ()
   target_link_libraries(sqlitemetal
           ${system-log}
-          ${system-z}
           ${PROJECT_SOURCE_DIR}/src/main/libs/${ANDROID_ABI}/lib2NativeScript.so
           ${SQLITE_ANDROID_LIB}
           android
           sqlite3
           )
 endif ()
+
+# add_custom_command(TARGET sqlitemetal
+#         POST_BUILD
+#         COMMAND ${CMAKE_COMMAND} -E copy
+#         ${SQLITE_ANDROID_LIB}
+#         ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libsqlitemetal.so
+#         )

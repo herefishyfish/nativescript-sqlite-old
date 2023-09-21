@@ -5,6 +5,16 @@
 #include "Caches.h"
 #include "Helpers.h"
 #include "sqlite3.h"
+#include "ThreadPool.h"
+#include "V8Callback.h"
+#include "SQLite.h"
+#include <cstring>
+#include <map>
+
+struct ResolverContext {
+    v8::Isolate* isolate;
+    v8::Persistent<v8::Promise::Resolver> resolver;
+};
 
 class SQLiteImpl {
 public:
@@ -43,6 +53,13 @@ public:
 private:
     sqlite3* sqlite_;
     std::string path_;
+    ThreadPool* threadPool;
+
+    static v8::Persistent<v8::Function> constructor;
+
+    std::mutex resolverMutex;
+    std::condition_variable resolverCondVar;
+    std::deque<std::shared_ptr<v8::Persistent<v8::Promise::Resolver>>> resolverQueue;
 };
 
 #endif //SQLITE_CORE_SQLITEIMPL_H

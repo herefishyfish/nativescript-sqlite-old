@@ -1,11 +1,11 @@
 #include "SQLiteImpl.h"
 #include <sqlite3.h>
-#include <cstring>
 
 using namespace std;
 
-SQLiteImpl::SQLiteImpl(sqlite3 *sqlite) : sqlite_(sqlite)
+SQLiteImpl::SQLiteImpl(sqlite3 *db) : sqlite_(db)
 {
+  threadPool = new ThreadPool();
 }
 
 void SQLiteImpl::Init(v8::Isolate *isolate)
@@ -121,6 +121,8 @@ void SQLiteImpl::Open(const v8::FunctionCallbackInfo<v8::Value> &args)
 
 void returnString(const v8::FunctionCallbackInfo<v8::Value> &args, std::string functionName)
 {
+  Helpers::LogToConsole(functionName);
+
   v8::Isolate *isolate = args.GetIsolate();
   args.GetReturnValue().Set(Helpers::ConvertToV8String(isolate, functionName.c_str()));
 }
@@ -227,7 +229,7 @@ void SQLiteImpl::Detach(const v8::FunctionCallbackInfo<v8::Value> &args)
 
 void SQLiteImpl::Transaction(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
-  returnString(args, "Transaction");
+  returnString(args, "ExecuteAsync");
 }
 
 void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
@@ -372,7 +374,83 @@ void SQLiteImpl::Execute(const v8::FunctionCallbackInfo<v8::Value> &args)
 
 void SQLiteImpl::ExecuteAsync(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
-  returnString(args, "ExecuteAsync");
+  v8::Isolate *isolate = args.GetIsolate();
+  SQLiteImpl *impl = GetPointer(args.This());
+  if (impl == nullptr)
+  {
+    Helpers::LogToConsole("Failed to execute SQL: database is not open.");
+    return;
+  }
+
+  v8::String::Utf8Value utf8Query(isolate, args[0]);
+  std::string query = *utf8Query;
+  std::vector<SQLite::DataValue> mappedParams;
+  if (args[1]->IsArray())
+  {
+    v8::Local<v8::Array> paramsArray = args[1].As<v8::Array>();
+    mappedParams = SQLite::mapParams(isolate, paramsArray);
+  }
+
+  v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(args[2]);
+
+  auto persistCallback = new v8::Persistent<v8::Function, v8::CopyablePersistentTraits<v8::Function>>(isolate, callback);
+
+  // Execute function in a new thread
+  impl->threadPool->enqueue([isolate, impl, persistCallback, query, mappedParams]()
+                            {
+                                sqlite3_stmt* statement = SQLite::prepare(impl->sqlite_, query);
+                                if (!statement)
+                                {
+                                    Helpers::LogToConsole("Failed to prepare and bind statement.");
+                                    return;
+                                }
+
+                                SQLite::BindParams(statement, mappedParams);
+
+                                std::vector<SQLite::RowData> results = SQLite::fetchRows(statement);
+                                int finalizeStatus = sqlite3_finalize(statement);
+                                if (finalizeStatus != SQLITE_OK)
+                                {
+                                    Helpers::LogToConsole("Failed to finalize statement: " + std::to_string(finalizeStatus));
+                                    return;
+                                }
+
+                                v8::Locker locker(isolate);
+                                v8::Isolate::Scope isolateScope(isolate);
+                                v8::HandleScope handleScope(isolate);
+                                v8::Local<v8::Function> callback = persistCallback->Get(isolate);
+                                v8::Local<v8::Context> context = callback->CreationContext();
+                                v8::Context::Scope contextScope(context);
+
+                                v8::Local<v8::Array> resultArray = v8::Array::New(isolate);
+
+                                for (size_t i = 0; i < results.size(); ++i)
+                                {
+                                  v8::Local<v8::Object> rowObject = v8::Object::New(isolate);
+                                  SQLite::convertRowToV8(isolate, context, results[i], rowObject);
+                                  resultArray->Set(context, i, rowObject);
+                                }
+
+                                v8::Local<v8::Object> resultObject = v8::Object::New(isolate);
+                                resultObject->Set(context, Helpers::ConvertToV8String(isolate, "insertId"), v8::Integer::New(isolate, sqlite3_last_insert_rowid(impl->sqlite_)));
+                                resultObject->Set(context, Helpers::ConvertToV8String(isolate, "rowsAffected"), v8::Integer::New(isolate, sqlite3_changes(impl->sqlite_)));
+
+                                if (resultArray->Length() > 0)
+                                {
+                                    resultObject->Set(context, Helpers::ConvertToV8String(isolate, "rows"), resultArray);
+                                }
+
+                                const unsigned argc = 2;
+                                v8::Local<v8::Value> argv[argc] = {v8::Null(isolate), resultObject};
+                                v8::MaybeLocal<v8::Value> maybeResult = callback->Call(context, context->Global(), argc, argv);
+                                if (maybeResult.IsEmpty())
+                                {
+                                    Helpers::LogToConsole("Callback invocation failed.");
+                                    return;
+                                }
+
+                                persistCallback->Reset();
+                                delete persistCallback; });
 }
 
 void SQLiteImpl::ExecuteBatch(const v8::FunctionCallbackInfo<v8::Value> &args)
@@ -394,3 +472,59 @@ void SQLiteImpl::LoadFileAsync(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
   returnString(args, "LoadFileAsync");
 }
+
+// void SQLiteImpl::ExecuteAsync(const v8::FunctionCallbackInfo<v8::Value> &args)
+// {
+//   v8::Isolate *isolate = args.GetIsolate();
+//   SQLiteImpl *impl = GetPointer(args.This());
+//   if (impl == nullptr)
+//   {
+//     Helpers::LogToConsole("Failed to execute SQL: database is not open.");
+//     return;
+//   }
+
+//   v8::String::Utf8Value utf8Query(isolate, args[0]);
+//   std::string query = *utf8Query;
+
+//   std::vector<std::string> params;
+//   if (args[1]->IsArray())
+//   {
+//     v8::Local<v8::Array> arr = v8::Local<v8::Array>::Cast(args[1]);
+//     for (unsigned int i = 0; i < arr->Length(); i++)
+//     {
+//       v8::String::Utf8Value utf8Param(isolate, arr->Get(isolate->GetCurrentContext(), i).ToLocalChecked());
+//       params.push_back(*utf8Param);
+//     }
+//   }
+
+//   v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(args[2]);
+
+//   auto persistentCallback = new v8::Persistent<v8::Function, v8::CopyablePersistentTraits<v8::Function>>(isolate, callback);
+
+//   Helpers::LogToConsole("Starting new thread");
+//   impl->threadPool->enqueue([isolate, persistentCallback, query, params]()
+//                             {
+//                               Helpers::LogToConsole("Execute");
+//                               std::this_thread::sleep_for(std::chrono::seconds(2));
+
+//                               v8::Locker locker(isolate);
+//                               v8::Isolate::Scope isolateScope(isolate);
+//                               v8::HandleScope handleScope(isolate);
+
+//                               const unsigned argc = 2;
+//                               v8::Local<v8::Value> argv[argc] = {v8::Null(isolate), Helpers::ConvertToV8String(isolate, query.c_str())};
+
+//                               v8::Local<v8::Function> callback = persistentCallback->Get(isolate);
+//                               v8::Local<v8::Context> context = callback->CreationContext();
+
+//                               v8::MaybeLocal<v8::Value> maybeResult = callback->Call(context, context->Global(), argc, argv);
+//                               if (maybeResult.IsEmpty())
+//                               {
+//                                 Helpers::LogToConsole("Callback invocation failed.");
+//                                 return;
+//                               }
+
+//                               persistentCallback->Reset();
+//                               delete persistentCallback;
+//                                });
+// }
