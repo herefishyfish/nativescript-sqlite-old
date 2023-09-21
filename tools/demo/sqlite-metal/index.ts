@@ -45,20 +45,6 @@ export class DemoSharedSqliteMetal extends DemoSharedBase {
     // console.log('Insert Mary');
     // const g = await this.sqlite.executeAsync('INSERT INTO test (name, age) VALUES (?, ?);', ['Mary', 21]);
     // console.log('g', g);
-
-    const count = 1000;
-    const start2 = java.lang.System.nanoTime();
-    for (let i = 1; i < count + 1; i++) {
-      await this.sqlite.executeAsync('SELECT * FROM `Benchmark`');
-      // await this.sqlite.executeAsync('INSERT INTO Benchmark (value) VALUES (:value)', [
-      //   'hello',
-      // ]);
-    }
-    const end2 = java.lang.System.nanoTime();
-    console.log(`bench ${count} inserts took ` + (end2 - start2) / 1000000.0 + 'ms');
-    console.log(`bench on average 1 insert took ` + (end2 - start2) / 1000000.0 / count + 'ms');
-    const result = await this.sqlite.executeAsync('SELECT * FROM `Benchmark`');
-    console.log(JSON.stringify(result));
   }
 
   openDatabase() {
@@ -106,19 +92,23 @@ export class DemoSharedSqliteMetal extends DemoSharedBase {
       // ]);
     }
     const end2 = java.lang.System.nanoTime();
-    console.log(`bench ${count} selects took ` + (end2 - start2) / 1000000.0 + 'ms');
-    console.log(`bench average 1 select took ` + (end2 - start2) / 1000000.0 / count + 'ms');
+    console.log(`bench ${count} sync call took ` + (end2 - start2) / 1000000.0 + 'ms');
+    console.log(`bench average 1 sync call took ` + (end2 - start2) / 1000000.0 / count + 'ms');
 
-    let res = this.sqlite.execute('SELECT * FROM `Benchmark`');
-    console.log(JSON.stringify(res));
-
-    // ApplicationSettings.setString('hello', 'world');
+    // let res = this.sqlite.execute('SELECT * FROM `Benchmark`');
+    // console.log(JSON.stringify(res));
 
     const start3 = java.lang.System.nanoTime();
     for (let i = 1; i < count + 1; i++) {
-      await ApplicationSettings.getString('hello');
+      await this.sqlite.executeAsync('SELECT * FROM `Benchmark`');
+      // await this.sqlite.executeAsync('INSERT INTO Benchmark (value) VALUES (:value)', [
+      //   'hello',
+      // ]);
     }
     const end3 = java.lang.System.nanoTime();
-    console.log(`bench ${count} ApplicationSettings took ` + (end3 - start3) / 1000000.0 + 'ms');
+    console.log(`bench ${count} async calls took ` + (end3 - start3) / 1000000.0 + 'ms');
+    console.log(`bench on average 1 async call took ` + (end3 - start3) / 1000000.0 / count + 'ms');
+    // const result = await this.sqlite.executeAsync('SELECT * FROM `Benchmark`');
+    // console.log(JSON.stringify(result));
   }
 }
