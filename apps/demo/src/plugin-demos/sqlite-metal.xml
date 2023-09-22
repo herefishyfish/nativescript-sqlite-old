@@ -6,8 +6,10 @@
     <StackLayout class="p-20">
         <ScrollView class="h-full">
           <StackLayout>
+            <StackLayout loaded="{{ onLoaded }}" width="20" height="20" margin="5" padding="5" backgroundColor="red" />
             <Button text="Test sqlite-metal" tap="{{ testIt }}" class="btn btn-primary"/>
             <Button text="Bench sqlite-metal" tap="{{ benchIt }}" class="btn btn-primary"/>
+            <Button text="Bench sqlite-metal async" tap="{{ benchAsync }}" class="btn btn-primary"/>
             <Button text="open db" tap="{{ openDatabase }}" class="btn btn-primary"/>
             <Button text="close db" tap="{{ closeDatabase }}" class="btn btn-primary"/>
             <Button text="delete db" tap="{{ deleteDatabase }}" class="btn btn-primary"/>
