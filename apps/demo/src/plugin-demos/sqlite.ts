@@ -1,5 +1,5 @@
 import { Observable, EventData, Page } from '@nativescript/core';
-import { DemoSharedSqliteCore } from '@demo/shared';
+import { DemoSharedSqlite } from '@demo/shared';
 import {} from '@nativescript/sqlite';
 
 export function navigatingTo(args: EventData) {
@@ -7,4 +7,4 @@ export function navigatingTo(args: EventData) {
   page.bindingContext = new DemoModel();
 }
 
-export class DemoModel extends DemoSharedSqliteCore {}
+export class DemoModel extends DemoSharedSqlite {}

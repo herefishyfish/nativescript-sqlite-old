@@ -1,6 +1,52 @@
-export * from './common';
-export * from './utils';
-
-export abstract class AbstractSQLiteDatabase<T = any> implements ISQLiteDatabase {}
-
-export class SQLiteDatabase extends AbstractSQLiteDatabase {}
+export function sqlite3_open(path: string);
+export function sqlite3_open_v2(path: string, flags: number);
+export function sqlite3_open16(path: string);
+export function sqlite3_close(db: number);
+export function sqlite3_exec(db: number, sql: string);
+export function sqlite3_prepare_v2(db: number, sql: string);
+export function sqlite3_step(stmt: number);
+export function sqlite3_finalize(stmt: number);
+export function sqlite3_column_count(stmt: number);
+export function sqlite3_column_name(stmt: number, index: number);
+export function sqlite3_column_type(stmt: number, index: number);
+export function sqlite3_column_text(stmt: number, index: number);
+export function sqlite3_column_int(stmt: number, index: number);
+export function sqlite3_column_double(stmt: number, index: number);
+export function sqlite3_bind_text(stmt: number, index: number, value: string);
+export function sqlite3_bind_int(stmt: number, index: number, value: number);
+export function sqlite3_bind_double(stmt: number, index: number, value: number);
+export function sqlite3_bind_null(stmt: number, index: number);
+export function sqlite3_bind_blob(stmt: number, index: number, value: ArrayBuffer);
+export function sqlite3_changes(db: number);
+export function sqlite3_last_insert_rowid(db: number);
+export function sqlite3_total_changes(db: number);
+export function sqlite3_errmsg(db: number);
+export function sqlite3_errcode(db: number);
+export function sqlite3_extended_errcode(db: number);
+export function sqlite3_interrupt(db: number);
+export function sqlite3_complete(sql: string);
+export function sqlite3_complete16(sql: string);
+export function sqlite3_busy_timeout(db: number, ms: number);
+export function sqlite3_get_autocommit(db: number);
+export function sqlite3_db_filename(db: number, dbName: string);
+export function sqlite3_db_readonly(db: number, dbName: string);
+export function sqlite3_db_release_memory(db: number);
+export function sqlite3_db_cacheflush(db: number);
+export function sqlite3_system_errno(db: number);
+export function sqlite3_errstr(code: number);
+export function sqlite3_errstr16(code: number);
+export function sqlite3_limit(db: number, id: number, newVal: number);
+export function sqlite3_next_stmt(db: number, stmt: number);
+export function sqlite3_sql(stmt: number);
+export function sqlite3_status(op: number, reset: boolean);
+export function sqlite3_status64(op: number, reset: boolean);
+export function sqlite3_db_status(db: number, op: number, reset: boolean);
+export function sqlite3_stmt_status(stmt: number, op: number, reset: boolean);
+export function sqlite3_backup_init(destDb: number, destName: string, sourceDb: number, sourceName: string);
+export function sqlite3_backup_step(p: number, n: number);
+export function sqlite3_backup_finish(p: number);
+export function sqlite3_backup_remaining(p: number);
+export function sqlite3_backup_pagecount(p: number);
+export function sqlite3_sleep(ms: number);
+export function sqlite3_extended_result_codes(db: number, onoff: boolean);
+export function sqlite3_limit(db: number, id: number, newVal: number);

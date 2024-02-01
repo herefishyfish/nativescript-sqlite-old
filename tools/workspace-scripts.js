@@ -89,6 +89,13 @@ module.exports = {
           description: '@nativescript/sqlite-metal: Build',
         },
       },
+      // @nativescript/sqlite
+      sqlite: {
+        build: {
+          script: 'nx run sqlite:build.all',
+          description: '@nativescript/sqlite: Build',
+        },
+      },
       'build-all': {
         script: 'nx run-many --target=build.all --all',
         description: 'Build all packages',
@@ -114,6 +121,10 @@ module.exports = {
       'sqlite-metal': {
         script: 'nx run sqlite-metal:focus',
         description: 'Focus on @nativescript/sqlite-metal',
+      },
+      sqlite: {
+        script: 'nx run sqlite:focus',
+        description: 'Focus on @nativescript/sqlite',
       },
       reset: {
         script: 'nx g @nativescript/plugin-tools:focus-packages',

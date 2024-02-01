@@ -16,6 +16,7 @@
   },
   "private": true,
   "devDependencies": {
+    "@angular-devkit/build-angular": "^15.0.0",
     "@angular/animations": "^15.0.0",
     "@angular/common": "^15.0.0",
     "@angular/compiler": "^15.0.0",
@@ -35,10 +36,9 @@
     "nativescript-vue": "~2.9.0",
     "nativescript-vue-template-compiler": "~2.9.0",
     "ng-packagr": "^15.0.0",
-    "rxjs": "~7.5.0",
+    "rxjs": "~7.8.0",
     "typescript": "~4.8.0",
-    "zone.js": "~0.11.1",
-    "@angular-devkit/build-angular": "^15.0.0"
+    "zone.js": "~0.13.0"
   },
   "lint-staged": {
     "**/*.{js,ts,scss,json,html}": [

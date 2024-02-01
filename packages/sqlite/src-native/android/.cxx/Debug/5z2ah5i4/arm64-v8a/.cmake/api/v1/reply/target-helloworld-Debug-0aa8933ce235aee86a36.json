@@ -1,0 +1,160 @@
+{
+  "artifacts": [
+    {
+      "path": "C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/build/intermediates/cxx/Debug/5z2ah5i4/obj/arm64-v8a/libhelloworld.so"
+    }
+  ],
+  "backtrace": 1,
+  "backtraceGraph": {
+    "commands": ["add_library", "target_link_libraries", "include_directories"],
+    "files": ["CMakeLists.txt"],
+    "nodes": [
+      {
+        "file": 0
+      },
+      {
+        "command": 0,
+        "file": 0,
+        "line": 34,
+        "parent": 0
+      },
+      {
+        "command": 1,
+        "file": 0,
+        "line": 59,
+        "parent": 0
+      },
+      {
+        "command": 2,
+        "file": 0,
+        "line": 15,
+        "parent": 0
+      }
+    ]
+  },
+  "compileGroups": [
+    {
+      "compileCommandFragments": [
+        {
+          "fragment": "-O2 -frtti -fexceptions -Wall -Wno-unused-variable -fstack-protector-all -O0 -fno-limit-debug-info  -fPIC"
+        },
+        {
+          "fragment": "-std=c++17"
+        }
+      ],
+      "defines": [
+        {
+          "define": "helloworld_EXPORTS"
+        }
+      ],
+      "includes": [
+        {
+          "backtrace": 3,
+          "path": "C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/helloworld"
+        },
+        {
+          "backtrace": 3,
+          "path": "C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/PUBLIC"
+        },
+        {
+          "backtrace": 3,
+          "path": "C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/src/main/cpp/include/libc++"
+        },
+        {
+          "backtrace": 3,
+          "path": "C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/src/main/cpp/include"
+        },
+        {
+          "backtrace": 3,
+          "path": "C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/src/main/cpp"
+        },
+        {
+          "backtrace": 3,
+          "path": "C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/src/main/cpp/my_sdk/include"
+        },
+        {
+          "backtrace": 3,
+          "path": "C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/../../platforms/ios/src/common-cpp"
+        },
+        {
+          "backtrace": 3,
+          "path": "C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/../.."
+        }
+      ],
+      "language": "CXX",
+      "sourceIndexes": [0, 1],
+      "sysroot": {
+        "path": "C:/Users/Dylan/AppData/Local/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/windows-x86_64/sysroot"
+      }
+    }
+  ],
+  "id": "helloworld::@6890427a1f51a3e7e1df",
+  "link": {
+    "commandFragments": [
+      {
+        "fragment": "-Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libgcc_real.a -Wl,--exclude-libs,libatomic.a -Wl,--build-id -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments",
+        "role": "flags"
+      },
+      {
+        "fragment": "-LC:\\Users\\Dylan\\Code\\NativeScript\\nativescript-v8-module\\packages\\v8-module-cpp\\src-native\\android\\nativescript-regular.aar\\jni\\arm64-v8a",
+        "role": "libraryPath"
+      },
+      {
+        "fragment": "-LC:\\Users\\Dylan\\Code\\NativeScript\\nativescript-v8-module\\packages\\v8-module-cpp\\src-native\\android\\src\\main\\jniLibs\\arm64-v8a",
+        "role": "libraryPath"
+      },
+      {
+        "fragment": "-llog",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lNativeScript",
+        "role": "libraries"
+      },
+      {
+        "backtrace": 2,
+        "fragment": "-landroid",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lmy_sdk",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-latomic -lm",
+        "role": "libraries"
+      }
+    ],
+    "language": "CXX",
+    "sysroot": {
+      "path": "C:/Users/Dylan/AppData/Local/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/windows-x86_64/sysroot"
+    }
+  },
+  "name": "helloworld",
+  "nameOnDisk": "libhelloworld.so",
+  "paths": {
+    "build": ".",
+    "source": "."
+  },
+  "sourceGroups": [
+    {
+      "name": "Source Files",
+      "sourceIndexes": [0, 1]
+    }
+  ],
+  "sources": [
+    {
+      "backtrace": 1,
+      "compileGroupIndex": 0,
+      "path": "src/main/cpp/Install.cpp",
+      "sourceGroupIndex": 0
+    },
+    {
+      "backtrace": 1,
+      "compileGroupIndex": 0,
+      "path": "C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/platforms/ios/src/common-cpp/hello-world.cpp",
+      "sourceGroupIndex": 0
+    }
+  ],
+  "type": "SHARED_LIBRARY"
+}

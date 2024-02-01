@@ -1,0 +1,13 @@
+# ninja log v5
+0	412	713433716	CMakeFiles/helloworld.dir/src/main/cpp/Install.cpp.o	30d2496d86e9502d
+130	414	713433716	CMakeFiles/helloworld.dir/f9702c5e3b39ced1afd01188bd96d625/platforms/ios/src/common-cpp/hello-world.cpp.o	3eb24dbd878b03c9
+414	635	713433717	../../../../build/intermediates/cxx/Debug/5z2ah5i4/obj/armeabi-v7a/libhelloworld.so	750c9ff3e0faa327
+2	472	713433853	CMakeFiles/helloworld.dir/f9702c5e3b39ced1afd01188bd96d625/platforms/ios/src/common-cpp/hello-world.cpp.o	3eb24dbd878b03c9
+472	724	713433853	../../../../build/intermediates/cxx/Debug/5z2ah5i4/obj/armeabi-v7a/libhelloworld.so	750c9ff3e0faa327
+1	382	713434304	CMakeFiles/helloworld.dir/f9702c5e3b39ced1afd01188bd96d625/platforms/ios/src/common-cpp/hello-world.cpp.o	3eb24dbd878b03c9
+382	588	713434304	../../../../build/intermediates/cxx/Debug/5z2ah5i4/obj/armeabi-v7a/libhelloworld.so	750c9ff3e0faa327
+2	294	713434356	../../../../build/intermediates/cxx/Debug/5z2ah5i4/obj/armeabi-v7a/libhelloworld.so	750c9ff3e0faa327
+3	252	713434409	../../../../build/intermediates/cxx/Debug/5z2ah5i4/obj/armeabi-v7a/libhelloworld.so	750c9ff3e0faa327
+2	293	713434907	../../../../build/intermediates/cxx/Debug/5z2ah5i4/obj/armeabi-v7a/libhelloworld.so	750c9ff3e0faa327
+2	397	713435119	CMakeFiles/helloworld.dir/f9702c5e3b39ced1afd01188bd96d625/platforms/ios/src/common-cpp/hello-world.cpp.o	3eb24dbd878b03c9
+398	609	713435119	../../../../build/intermediates/cxx/Debug/5z2ah5i4/obj/armeabi-v7a/libhelloworld.so	750c9ff3e0faa327

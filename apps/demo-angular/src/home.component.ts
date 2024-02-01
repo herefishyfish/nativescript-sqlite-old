@@ -9,14 +9,5 @@ export class HomeComponent {
     {
       name: 'sqlite',
     },
-    {
-      name: 'sqlite-metal',
-    },
-    {
-      name: 'sqlite-requery',
-    },
-    {
-      name: 'sqlite-sqlcipher',
-    },
   ];
 }

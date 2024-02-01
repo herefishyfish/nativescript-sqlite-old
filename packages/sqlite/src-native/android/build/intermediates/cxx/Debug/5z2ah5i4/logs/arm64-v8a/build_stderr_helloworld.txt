@@ -1,0 +1,1 @@
+ninja: error: '../../../../src/main/jniLibs/arm64-v8a/libmy_sdk.so', needed by '../../../../build/intermediates/cxx/Debug/5z2ah5i4/obj/arm64-v8a/libhelloworld.so', missing and no known rule to make it

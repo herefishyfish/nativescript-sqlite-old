@@ -1,0 +1,3 @@
+ninja: Entering directory `C:\Users\Dylan\Code\NativeScript\nativescript-v8-module\packages\v8-module-cpp\src-native\android\.cxx\Debug\5z2ah5i4\x86_64'
+[1/2] Building CXX object CMakeFiles/helloworld.dir/2f423ae98f094a49e5bf0bdfb27d3686/v8-module-cpp/platforms/ios/src/common-cpp/hello-world.cpp.o
+[2/2] Linking CXX shared library ..\..\..\..\build\intermediates\cxx\Debug\5z2ah5i4\obj\x86_64\libhelloworld.so
