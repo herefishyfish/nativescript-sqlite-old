@@ -19,6 +19,11 @@
             "glob": "**/*",
             "input": "packages/sqlite/platforms/",
             "output": "./platforms/"
+          },
+          {
+            "glob": "**/*",
+            "input": "packages/sqlite/src-native/",
+            "output": "./src-native/"
           }
         ],
         "dependsOn": [

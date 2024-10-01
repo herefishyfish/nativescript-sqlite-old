@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.15.0)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Set this to your library name in lower case.
-project(helloworld)
+project(sqlite)
 
-# This name will be used as your library name. For example helloworld will become libhelloworld.so
+# This name will be used as your library name. For example sqlite will become libsqlite.so
 # Keep it unique so it doesn't conflict with other libraries.
-set (PACKAGE_NAME "helloworld")
+set (PACKAGE_NAME "sqlite")
  # The is the folder for the common cpp code we will share with ios
 set (COMMON_CPP_DIR ../../platforms/ios/src/common-cpp)
 
@@ -20,7 +20,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src/main/cpp/include
         ${PROJECT_SOURCE_DIR}/src/main/cpp
         # Include headers of our rust library, if you don't use it, disable this line.
-        ${PROJECT_SOURCE_DIR}/src/main/cpp/my_sdk/include
+        # ${PROJECT_SOURCE_DIR}/src/main/cpp/my_sdk/include
 
         # The is the folder for the common cpp code we will share with ios
         ../../platforms/ios/src/common-cpp
@@ -42,7 +42,8 @@ add_library(
 
         # We define any cpp files we add the common-cpp folder here
         # The header files are included automatically.
-        ${COMMON_CPP_DIR}/hello-world.cpp
+        ${COMMON_CPP_DIR}/sqlite.cpp
+        ${COMMON_CPP_DIR}/sqlite/sqlite3.c
 )
 
 
@@ -61,7 +62,7 @@ target_link_libraries(${PACKAGE_NAME}
           ${NATIVESCRIPT_SO_PATH}/jni/${ANDROID_ABI}/libNativeScript.so
           android
           # Remove this line if not using the rust library
-          ${PROJECT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libmy_sdk.so
+        #   ${PROJECT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libmy_sdk.so
           )
 
 

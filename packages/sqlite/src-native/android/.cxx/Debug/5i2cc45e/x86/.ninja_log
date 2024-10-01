@@ -1,0 +1,6 @@
+# ninja log v5
+146	2502	728550665	CMakeFiles/sqlite.dir/C_/Users/Dylan/Code/NativeScript/fishqlite/packages/sqlite/platforms/ios/src/common-cpp/sqlite/sqlite3.c.o	671ecafbd8621f8e
+142	413	728550700	CMakeFiles/sqlite.dir/C_/Users/Dylan/Code/NativeScript/fishqlite/packages/sqlite/platforms/ios/src/common-cpp/sqlite.cpp.o	f3b42def66e92de6
+2	407	728550775	CMakeFiles/sqlite.dir/src/main/cpp/Install.cpp.o	4649dc8f01a0ea7a
+407	656	728550776	../../../../build/intermediates/cxx/Debug/5i2cc45e/obj/x86/libsqlite.so	15551af7b1408ba2
+2	292	728550820	../../../../build/intermediates/cxx/Debug/5i2cc45e/obj/x86/libsqlite.so	15551af7b1408ba2

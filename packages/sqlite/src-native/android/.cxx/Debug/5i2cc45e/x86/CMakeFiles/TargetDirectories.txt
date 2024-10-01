@@ -1,0 +1,3 @@
+C:/Users/Dylan/Code/NativeScript/fishqlite/packages/sqlite/src-native/android/.cxx/Debug/5i2cc45e/x86/CMakeFiles/rebuild_cache.dir
+C:/Users/Dylan/Code/NativeScript/fishqlite/packages/sqlite/src-native/android/.cxx/Debug/5i2cc45e/x86/CMakeFiles/sqlite.dir
+C:/Users/Dylan/Code/NativeScript/fishqlite/packages/sqlite/src-native/android/.cxx/Debug/5i2cc45e/x86/CMakeFiles/edit_cache.dir

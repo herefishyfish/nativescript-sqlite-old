@@ -7,4 +7,9 @@ export function navigatingTo(args: EventData) {
   page.bindingContext = new DemoModel();
 }
 
-export class DemoModel extends DemoSharedSqlite {}
+export class DemoModel extends DemoSharedSqlite {
+  open() {
+    console.log('open');
+    console.log(global.Sqlite3.sqlite3_open());
+  }
+}

@@ -1,0 +1,3 @@
+const Sqlite: {
+  open(): any;
+};

@@ -23,3 +23,8 @@ android {
     pickFirst 'lib/x86/libc++_shared.so'
   }
 }
+
+dependencies {
+  implementation project(":sqlitelib")
+  implementation 'androidx.multidex:multidex:2.0.1'
+}

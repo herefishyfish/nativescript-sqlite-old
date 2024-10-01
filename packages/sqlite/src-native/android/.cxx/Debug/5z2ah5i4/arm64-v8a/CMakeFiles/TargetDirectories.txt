@@ -1,3 +1,0 @@
-C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/.cxx/Debug/5z2ah5i4/arm64-v8a/CMakeFiles/helloworld.dir
-C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/.cxx/Debug/5z2ah5i4/arm64-v8a/CMakeFiles/edit_cache.dir
-C:/Users/Dylan/Code/NativeScript/nativescript-v8-module/packages/v8-module-cpp/src-native/android/.cxx/Debug/5z2ah5i4/arm64-v8a/CMakeFiles/rebuild_cache.dir

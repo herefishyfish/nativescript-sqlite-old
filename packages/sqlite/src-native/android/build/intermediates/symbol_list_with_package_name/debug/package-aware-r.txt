@@ -1,1 +1,1 @@
-com.helloworldlibrary
+org.nativescript.sqlite

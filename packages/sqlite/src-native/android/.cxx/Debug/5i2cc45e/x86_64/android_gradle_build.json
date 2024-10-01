@@ -1,0 +1,22 @@
+{
+  "buildFiles": ["C:\\Users\\Dylan\\Code\\NativeScript\\fishqlite\\packages\\sqlite\\src-native\\android\\CMakeLists.txt"],
+  "cleanCommandsComponents": [["C:\\Users\\Dylan\\AppData\\Local\\Android\\Sdk\\cmake\\3.18.1\\bin\\ninja.exe", "-C", "C:\\Users\\Dylan\\Code\\NativeScript\\fishqlite\\packages\\sqlite\\src-native\\android\\.cxx\\Debug\\5i2cc45e\\x86_64", "clean"]],
+  "buildTargetsCommandComponents": ["C:\\Users\\Dylan\\AppData\\Local\\Android\\Sdk\\cmake\\3.18.1\\bin\\ninja.exe", "-C", "C:\\Users\\Dylan\\Code\\NativeScript\\fishqlite\\packages\\sqlite\\src-native\\android\\.cxx\\Debug\\5i2cc45e\\x86_64", "{LIST_OF_TARGETS_TO_BUILD}"],
+  "libraries": {
+    "sqlite::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "x86_64",
+      "artifactName": "sqlite",
+      "output": "C:\\Users\\Dylan\\Code\\NativeScript\\fishqlite\\packages\\sqlite\\src-native\\android\\build\\intermediates\\cxx\\Debug\\5i2cc45e\\obj\\x86_64\\libsqlite.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "C:\\Users\\Dylan\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe",
+      "cppCompilerExecutable": "C:\\Users\\Dylan\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe"
+    }
+  },
+  "cFileExtensions": ["c"],
+  "cppFileExtensions": ["cpp"]
+}

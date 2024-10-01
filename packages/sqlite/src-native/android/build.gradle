@@ -23,7 +23,7 @@ def NATIVESCRIPT_SO_PATH = "${project.projectDir.getAbsolutePath()}/${NATIVESCRI
 def IS_DEBUG = resolveBuildType() == 'debug'
 
 android {
-  namespace 'com.helloworldlibrary'
+  namespace 'org.nativescript.sqlite'
 
   compileSdk = safeExtGet("NS_DEFAULT_COMPILE_SDK_VERSION", 32) as int
   defaultConfig {

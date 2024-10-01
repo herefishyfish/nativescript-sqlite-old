@@ -1,0 +1,3 @@
+def lib_name = "sqlitelib"
+include ":${lib_name}"
+project(":${lib_name}").projectDir = file("../../../../packages/sqlite/src-native/android");

@@ -1,0 +1,43 @@
+{
+  "configurations": [
+    {
+      "directories": [
+        {
+          "build": ".",
+          "minimumCMakeVersion": {
+            "string": "3.6.0"
+          },
+          "projectIndex": 0,
+          "source": ".",
+          "targetIndexes": [0]
+        }
+      ],
+      "name": "Debug",
+      "projects": [
+        {
+          "directoryIndexes": [0],
+          "name": "sqlite",
+          "targetIndexes": [0]
+        }
+      ],
+      "targets": [
+        {
+          "directoryIndex": 0,
+          "id": "sqlite::@6890427a1f51a3e7e1df",
+          "jsonFile": "target-sqlite-Debug-7183cc3bb0a659c5a818.json",
+          "name": "sqlite",
+          "projectIndex": 0
+        }
+      ]
+    }
+  ],
+  "kind": "codemodel",
+  "paths": {
+    "build": "C:/Users/Dylan/Code/NativeScript/fishqlite/packages/sqlite/src-native/android/.cxx/Debug/5i2cc45e/x86",
+    "source": "C:/Users/Dylan/Code/NativeScript/fishqlite/packages/sqlite/src-native/android"
+  },
+  "version": {
+    "major": 2,
+    "minor": 1
+  }
+}

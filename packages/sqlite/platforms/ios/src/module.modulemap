@@ -1,4 +1,4 @@
-module HelloWorldInstaller {
-    header "HelloWorldInstaller.h"
+module SqliteInstaller {
+    header "SqliteInstaller.h"
     export *
 }

@@ -1,0 +1,1 @@
+C:\Users\Dylan\Code\NativeScript\fishqlite\packages\sqlite\src-native\android\build\intermediates\cxx\Debug\5i2cc45e\obj\x86_64
